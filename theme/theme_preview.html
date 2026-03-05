@@ -1,0 +1,361 @@
+<html lang="en">
+<head>
+  <style>
+:root {
+  --neutral-content: light-dark(#1C1B20, #A6A3B3);
+  --neutral-content-hover: light-dark(#302E39, #BFBDC9);
+  --neutral-content-pressed: light-dark(#454353, #E1DFE6);
+  --neutral-content-focus: light-dark(#5B586F, #BFBDC9);
+  --neutral-content-disabled: light-dark(#747188, #8C899D);
+  --neutral-content-secondary: light-dark(#1C1B20, #747188);
+  --neutral-content-secondary-hover: light-dark(#302E39, #D1CED8);
+  --neutral-content-secondary-pressed: light-dark(#454353, #D1CED8);
+  --neutral-content-secondary-focus: light-dark(#5B586F, #D1CED8);
+  --neutral-content-secondary-disabled: light-dark(#747188, #302E39);
+  --neutral-content-highlight: light-dark(#1C1B20, #A6A3B3);
+  --neutral-content-highlight-hover: light-dark(#302E39, #C5C2CE);
+  --neutral-content-highlight-pressed: light-dark(#454353, #C5C2CE);
+  --neutral-content-highlight-focus: light-dark(#5B586F, #C5C2CE);
+  --neutral-content-highlight-disabled: light-dark(#747188, #C5C2CE);
+  --neutral-trim: light-dark(#1C1B20, #2D2B36);
+  --neutral-trim-hover: light-dark(#302E39, #2D2B36);
+  --neutral-trim-pressed: light-dark(#454353, #2D2B36);
+  --neutral-trim-focus: light-dark(#5B586F, #2D2B36);
+  --neutral-trim-disabled: light-dark(#747188, #2D2B36);
+  --neutral-surface: light-dark(#1C1B20, #211F26);
+  --neutral-surface-hover: light-dark(#302E39, #27262E);
+  --neutral-surface-pressed: light-dark(#454353, #848196);
+  --neutral-surface-focus: light-dark(#5B586F, #848196);
+  --neutral-surface-disabled: light-dark(#747188, #211F26);
+  --neutral-surface-low: light-dark(#1C1B20, #1B1A1F);
+  --neutral-surface-low-hover: light-dark(#302E39, #1B1A1F);
+  --neutral-surface-low-pressed: light-dark(#454353, #1B1A1F);
+  --neutral-surface-low-focus: light-dark(#5B586F, #1B1A1F);
+  --neutral-surface-low-disabled: light-dark(#747188, #1B1A1F);
+  --neutral-surface-high: light-dark(#1C1B20, #141317);
+  --neutral-surface-high-hover: light-dark(#302E39, #141317);
+  --neutral-surface-high-pressed: light-dark(#454353, #141317);
+  --neutral-surface-high-focus: light-dark(#5B586F, #141317);
+  --neutral-surface-high-disabled: light-dark(#747188, #141317);
+  --neutral-surface-bg: light-dark(#1C1B20, #141317);
+  --neutral-surface-bg-hover: light-dark(#302E39, #141317);
+  --neutral-surface-bg-pressed: light-dark(#454353, #141317);
+  --neutral-surface-bg-focus: light-dark(#5B586F, #141317);
+  --neutral-surface-bg-disabled: light-dark(#747188, #141317);
+  --action-content: light-dark(#19142D, #6252CE);
+  --action-content-hover: light-dark(#28204C, #7F6AE1);
+  --action-content-pressed: light-dark(#372D6D, #937EE6);
+  --action-content-focus: light-dark(#473B91, #7F6AE1);
+  --action-content-disabled: light-dark(#5749B6, #848196);
+  --action-content-secondary: light-dark(#19142D, #473B91);
+  --action-content-secondary-hover: light-dark(#28204C, #4F42A3);
+  --action-content-secondary-pressed: light-dark(#372D6D, #5749B6);
+  --action-content-secondary-focus: light-dark(#473B91, #4F42A3);
+  --action-content-secondary-disabled: light-dark(#5749B6, #848196);
+  --action-content-highlight: light-dark(#19142D, #8E79E5);
+  --action-content-highlight-hover: light-dark(#28204C, #B8A5EE);
+  --action-content-highlight-pressed: light-dark(#372D6D, #C9BAF1);
+  --action-content-highlight-focus: light-dark(#473B91, #B8A5EE);
+  --action-content-highlight-disabled: light-dark(#5749B6, #5B586F);
+  --action-trim: light-dark(#19142D, #261F48);
+  --action-trim-hover: light-dark(#28204C, #372D6D);
+  --action-trim-pressed: light-dark(#372D6D, #372D6D);
+  --action-trim-focus: light-dark(#473B91, #372D6D);
+  --action-trim-disabled: light-dark(#5749B6, #2D2B36);
+  --action-surface: light-dark(#19142D, #19142D);
+  --action-surface-hover: light-dark(#28204C, #19142D);
+  --action-surface-pressed: light-dark(#372D6D, #19142D);
+  --action-surface-focus: light-dark(#473B91, #19142D);
+  --action-surface-disabled: light-dark(#5749B6, #19142D);
+  --action-surface-low: light-dark(#19142D, #130C1E);
+  --action-surface-low-hover: light-dark(#19142D, #130C1E);
+  --action-surface-low-pressed: light-dark(#372D6D, #130C1E);
+  --action-surface-low-focus: light-dark(#473B91, #130C1E);
+  --action-surface-low-disabled: light-dark(#5749B6, #130C1E);
+  --action-surface-high: light-dark(#19142D, #1C1633);
+  --action-surface-high-hover: light-dark(#28204C, #1C1633);
+  --action-surface-high-pressed: light-dark(#372D6D, #1C1633);
+  --action-surface-high-focus: light-dark(#473B91, #1C1633);
+  --action-surface-high-disabled: light-dark(#5749B6, #1C1633);
+  --action-surface-bg: light-dark(#19142D, #11091B);
+  --action-surface-bg-hover: light-dark(#28204C, #11091B);
+  --action-surface-bg-pressed: light-dark(#372D6D, #11091B);
+  --action-surface-bg-focus: light-dark(#473B91, #11091B);
+  --action-surface-bg-disabled: light-dark(#5749B6, #11091B);
+  --action-rev-content: light-dark(#19142D, #C9BAF1);
+  --action-rev-content-hover: light-dark(#28204C, #C9BAF1);
+  --action-rev-content-pressed: light-dark(#372D6D, #C9BAF1);
+  --action-rev-content-focus: light-dark(#473B91, #C9BAF1);
+  --action-rev-content-disabled: light-dark(#5749B6, #8E8B9F);
+  --action-rev-content-secondary: light-dark(#19142D, #B8A5EE);
+  --action-rev-content-secondary-hover: light-dark(#28204C, #B8A5EE);
+  --action-rev-content-secondary-pressed: light-dark(#372D6D, #B8A5EE);
+  --action-rev-content-secondary-focus: light-dark(#473B91, #B8A5EE);
+  --action-rev-content-secondary-disabled: light-dark(#5749B6, #C5C2CE);
+  --action-rev-content-highlight: light-dark(#19142D, #D9CFF5);
+  --action-rev-content-highlight-hover: light-dark(#28204C, #F9F9FB);
+  --action-rev-content-highlight-pressed: light-dark(#372D6D, #E9E4F8);
+  --action-rev-content-highlight-focus: light-dark(#473B91, #E9E4F8);
+  --action-rev-content-highlight-disabled: light-dark(#5749B6, #5B586F);
+  --action-rev-trim: light-dark(#19142D, #5D4DC2);
+  --action-rev-trim-hover: light-dark(#28204C, #5D4DC2);
+  --action-rev-trim-pressed: light-dark(#372D6D, #5D4DC2);
+  --action-rev-trim-focus: light-dark(#473B91, #5D4DC2);
+  --action-rev-trim-disabled: light-dark(#5749B6, #2D2B36);
+  --action-rev-surface: light-dark(#19142D, #6252CE);
+  --action-rev-surface-hover: light-dark(#28204C, #7F6AE1);
+  --action-rev-surface-pressed: light-dark(#372D6D, #7F6AE1);
+  --action-rev-surface-focus: light-dark(#473B91, #7F6AE1);
+  --action-rev-surface-disabled: light-dark(#5749B6, #302E39);
+  --action-rev-surface-low: light-dark(#19142D, #130C1E);
+  --action-rev-surface-low-hover: light-dark(#19142D, #130C1E);
+  --action-rev-surface-low-pressed: light-dark(#372D6D, #130C1E);
+  --action-rev-surface-low-focus: light-dark(#473B91, #130C1E);
+  --action-rev-surface-low-disabled: light-dark(#5749B6, #130C1E);
+  --action-rev-surface-high: light-dark(#19142D, #1C1633);
+  --action-rev-surface-high-hover: light-dark(#28204C, #1C1633);
+  --action-rev-surface-high-pressed: light-dark(#372D6D, #1C1633);
+  --action-rev-surface-high-focus: light-dark(#473B91, #1C1633);
+  --action-rev-surface-high-disabled: light-dark(#5749B6, #1C1633);
+  --action-rev-surface-bg: light-dark(#19142D, #11091B);
+  --action-rev-surface-bg-hover: light-dark(#28204C, #11091B);
+  --action-rev-surface-bg-pressed: light-dark(#372D6D, #11091B);
+  --action-rev-surface-bg-focus: light-dark(#473B91, #11091B);
+  --action-rev-surface-bg-disabled: light-dark(#5749B6, #11091B);
+}
+   body {
+	 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+     margin: 2rem;
+     color-scheme: light dark;
+     background-color: light-dark(#fff, #000);
+     color: light-dark(#222, #aaa);
+   }
+
+   main {
+     max-width: 30rem;
+   	 margin: 0 auto;
+   }
+   .color-role-swatches {
+     display: flex;
+     gap: 0.25rem;
+     margin-bottom: 2rem;
+   }
+   .color-role-swatches .swatch {
+     flex-grow: 2;
+     aspect-ratio: 1;
+     font-size: 0.7rem;
+   }
+   h2 {
+     margin-top: 2rem;
+     border-bottom: 2px solid #333;
+     padding-bottom: 0.5rem;
+   }
+   h3 {
+     margin-top: 1rem;
+     margin-bottom: 0.5rem;
+     font-size: 1rem;
+   }
+  </style>
+</head>
+<body>
+<main>
+<section id="colors">
+<h2>neutral</h2>
+<h3>content</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="content" style="background-color: var(--neutral-content);"> default</div>
+  <div class="swatch" title="content (hover)" style="background-color: var(--neutral-content-hover);"> hover</div>
+  <div class="swatch" title="content (pressed)" style="background-color: var(--neutral-content-pressed);"> pressed</div>
+  <div class="swatch" title="content (focus)" style="background-color: var(--neutral-content-focus);"> focus</div>
+  <div class="swatch" title="content (disabled)" style="background-color: var(--neutral-content-disabled);"> disabled</div>
+</div>
+<h3>content-secondary</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="content-secondary" style="background-color: var(--neutral-content-secondary);"> default</div>
+  <div class="swatch" title="content-secondary (hover)" style="background-color: var(--neutral-content-secondary-hover);"> hover</div>
+  <div class="swatch" title="content-secondary (pressed)" style="background-color: var(--neutral-content-secondary-pressed);"> pressed</div>
+  <div class="swatch" title="content-secondary (focus)" style="background-color: var(--neutral-content-secondary-focus);"> focus</div>
+  <div class="swatch" title="content-secondary (disabled)" style="background-color: var(--neutral-content-secondary-disabled);"> disabled</div>
+</div>
+<h3>content-highlight</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="content-highlight" style="background-color: var(--neutral-content-highlight);"> default</div>
+  <div class="swatch" title="content-highlight (hover)" style="background-color: var(--neutral-content-highlight-hover);"> hover</div>
+  <div class="swatch" title="content-highlight (pressed)" style="background-color: var(--neutral-content-highlight-pressed);"> pressed</div>
+  <div class="swatch" title="content-highlight (focus)" style="background-color: var(--neutral-content-highlight-focus);"> focus</div>
+  <div class="swatch" title="content-highlight (disabled)" style="background-color: var(--neutral-content-highlight-disabled);"> disabled</div>
+</div>
+<h3>trim</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="trim" style="background-color: var(--neutral-trim);"> default</div>
+  <div class="swatch" title="trim (hover)" style="background-color: var(--neutral-trim-hover);"> hover</div>
+  <div class="swatch" title="trim (pressed)" style="background-color: var(--neutral-trim-pressed);"> pressed</div>
+  <div class="swatch" title="trim (focus)" style="background-color: var(--neutral-trim-focus);"> focus</div>
+  <div class="swatch" title="trim (disabled)" style="background-color: var(--neutral-trim-disabled);"> disabled</div>
+</div>
+<h3>surface</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface" style="background-color: var(--neutral-surface);"> default</div>
+  <div class="swatch" title="surface (hover)" style="background-color: var(--neutral-surface-hover);"> hover</div>
+  <div class="swatch" title="surface (pressed)" style="background-color: var(--neutral-surface-pressed);"> pressed</div>
+  <div class="swatch" title="surface (focus)" style="background-color: var(--neutral-surface-focus);"> focus</div>
+  <div class="swatch" title="surface (disabled)" style="background-color: var(--neutral-surface-disabled);"> disabled</div>
+</div>
+<h3>surface-low</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface-low" style="background-color: var(--neutral-surface-low);"> default</div>
+  <div class="swatch" title="surface-low (hover)" style="background-color: var(--neutral-surface-low-hover);"> hover</div>
+  <div class="swatch" title="surface-low (pressed)" style="background-color: var(--neutral-surface-low-pressed);"> pressed</div>
+  <div class="swatch" title="surface-low (focus)" style="background-color: var(--neutral-surface-low-focus);"> focus</div>
+  <div class="swatch" title="surface-low (disabled)" style="background-color: var(--neutral-surface-low-disabled);"> disabled</div>
+</div>
+<h3>surface-high</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface-high" style="background-color: var(--neutral-surface-high);"> default</div>
+  <div class="swatch" title="surface-high (hover)" style="background-color: var(--neutral-surface-high-hover);"> hover</div>
+  <div class="swatch" title="surface-high (pressed)" style="background-color: var(--neutral-surface-high-pressed);"> pressed</div>
+  <div class="swatch" title="surface-high (focus)" style="background-color: var(--neutral-surface-high-focus);"> focus</div>
+  <div class="swatch" title="surface-high (disabled)" style="background-color: var(--neutral-surface-high-disabled);"> disabled</div>
+</div>
+<h3>surface-bg</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface-bg" style="background-color: var(--neutral-surface-bg);"> default</div>
+  <div class="swatch" title="surface-bg (hover)" style="background-color: var(--neutral-surface-bg-hover);"> hover</div>
+  <div class="swatch" title="surface-bg (pressed)" style="background-color: var(--neutral-surface-bg-pressed);"> pressed</div>
+  <div class="swatch" title="surface-bg (focus)" style="background-color: var(--neutral-surface-bg-focus);"> focus</div>
+  <div class="swatch" title="surface-bg (disabled)" style="background-color: var(--neutral-surface-bg-disabled);"> disabled</div>
+</div>
+<h2>action</h2>
+<h3>content</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="content" style="background-color: var(--action-content);"> default</div>
+  <div class="swatch" title="content (hover)" style="background-color: var(--action-content-hover);"> hover</div>
+  <div class="swatch" title="content (pressed)" style="background-color: var(--action-content-pressed);"> pressed</div>
+  <div class="swatch" title="content (focus)" style="background-color: var(--action-content-focus);"> focus</div>
+  <div class="swatch" title="content (disabled)" style="background-color: var(--action-content-disabled);"> disabled</div>
+</div>
+<h3>content-secondary</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="content-secondary" style="background-color: var(--action-content-secondary);"> default</div>
+  <div class="swatch" title="content-secondary (hover)" style="background-color: var(--action-content-secondary-hover);"> hover</div>
+  <div class="swatch" title="content-secondary (pressed)" style="background-color: var(--action-content-secondary-pressed);"> pressed</div>
+  <div class="swatch" title="content-secondary (focus)" style="background-color: var(--action-content-secondary-focus);"> focus</div>
+  <div class="swatch" title="content-secondary (disabled)" style="background-color: var(--action-content-secondary-disabled);"> disabled</div>
+</div>
+<h3>content-highlight</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="content-highlight" style="background-color: var(--action-content-highlight);"> default</div>
+  <div class="swatch" title="content-highlight (hover)" style="background-color: var(--action-content-highlight-hover);"> hover</div>
+  <div class="swatch" title="content-highlight (pressed)" style="background-color: var(--action-content-highlight-pressed);"> pressed</div>
+  <div class="swatch" title="content-highlight (focus)" style="background-color: var(--action-content-highlight-focus);"> focus</div>
+  <div class="swatch" title="content-highlight (disabled)" style="background-color: var(--action-content-highlight-disabled);"> disabled</div>
+</div>
+<h3>trim</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="trim" style="background-color: var(--action-trim);"> default</div>
+  <div class="swatch" title="trim (hover)" style="background-color: var(--action-trim-hover);"> hover</div>
+  <div class="swatch" title="trim (pressed)" style="background-color: var(--action-trim-pressed);"> pressed</div>
+  <div class="swatch" title="trim (focus)" style="background-color: var(--action-trim-focus);"> focus</div>
+  <div class="swatch" title="trim (disabled)" style="background-color: var(--action-trim-disabled);"> disabled</div>
+</div>
+<h3>surface</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface" style="background-color: var(--action-surface);"> default</div>
+  <div class="swatch" title="surface (hover)" style="background-color: var(--action-surface-hover);"> hover</div>
+  <div class="swatch" title="surface (pressed)" style="background-color: var(--action-surface-pressed);"> pressed</div>
+  <div class="swatch" title="surface (focus)" style="background-color: var(--action-surface-focus);"> focus</div>
+  <div class="swatch" title="surface (disabled)" style="background-color: var(--action-surface-disabled);"> disabled</div>
+</div>
+<h3>surface-low</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface-low" style="background-color: var(--action-surface-low);"> default</div>
+  <div class="swatch" title="surface-low (hover)" style="background-color: var(--action-surface-low-hover);"> hover</div>
+  <div class="swatch" title="surface-low (pressed)" style="background-color: var(--action-surface-low-pressed);"> pressed</div>
+  <div class="swatch" title="surface-low (focus)" style="background-color: var(--action-surface-low-focus);"> focus</div>
+  <div class="swatch" title="surface-low (disabled)" style="background-color: var(--action-surface-low-disabled);"> disabled</div>
+</div>
+<h3>surface-high</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface-high" style="background-color: var(--action-surface-high);"> default</div>
+  <div class="swatch" title="surface-high (hover)" style="background-color: var(--action-surface-high-hover);"> hover</div>
+  <div class="swatch" title="surface-high (pressed)" style="background-color: var(--action-surface-high-pressed);"> pressed</div>
+  <div class="swatch" title="surface-high (focus)" style="background-color: var(--action-surface-high-focus);"> focus</div>
+  <div class="swatch" title="surface-high (disabled)" style="background-color: var(--action-surface-high-disabled);"> disabled</div>
+</div>
+<h3>surface-bg</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface-bg" style="background-color: var(--action-surface-bg);"> default</div>
+  <div class="swatch" title="surface-bg (hover)" style="background-color: var(--action-surface-bg-hover);"> hover</div>
+  <div class="swatch" title="surface-bg (pressed)" style="background-color: var(--action-surface-bg-pressed);"> pressed</div>
+  <div class="swatch" title="surface-bg (focus)" style="background-color: var(--action-surface-bg-focus);"> focus</div>
+  <div class="swatch" title="surface-bg (disabled)" style="background-color: var(--action-surface-bg-disabled);"> disabled</div>
+</div>
+<h2>action-rev</h2>
+<h3>content</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="content" style="background-color: var(--action-rev-content);"> default</div>
+  <div class="swatch" title="content (hover)" style="background-color: var(--action-rev-content-hover);"> hover</div>
+  <div class="swatch" title="content (pressed)" style="background-color: var(--action-rev-content-pressed);"> pressed</div>
+  <div class="swatch" title="content (focus)" style="background-color: var(--action-rev-content-focus);"> focus</div>
+  <div class="swatch" title="content (disabled)" style="background-color: var(--action-rev-content-disabled);"> disabled</div>
+</div>
+<h3>content-secondary</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="content-secondary" style="background-color: var(--action-rev-content-secondary);"> default</div>
+  <div class="swatch" title="content-secondary (hover)" style="background-color: var(--action-rev-content-secondary-hover);"> hover</div>
+  <div class="swatch" title="content-secondary (pressed)" style="background-color: var(--action-rev-content-secondary-pressed);"> pressed</div>
+  <div class="swatch" title="content-secondary (focus)" style="background-color: var(--action-rev-content-secondary-focus);"> focus</div>
+  <div class="swatch" title="content-secondary (disabled)" style="background-color: var(--action-rev-content-secondary-disabled);"> disabled</div>
+</div>
+<h3>content-highlight</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="content-highlight" style="background-color: var(--action-rev-content-highlight);"> default</div>
+  <div class="swatch" title="content-highlight (hover)" style="background-color: var(--action-rev-content-highlight-hover);"> hover</div>
+  <div class="swatch" title="content-highlight (pressed)" style="background-color: var(--action-rev-content-highlight-pressed);"> pressed</div>
+  <div class="swatch" title="content-highlight (focus)" style="background-color: var(--action-rev-content-highlight-focus);"> focus</div>
+  <div class="swatch" title="content-highlight (disabled)" style="background-color: var(--action-rev-content-highlight-disabled);"> disabled</div>
+</div>
+<h3>trim</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="trim" style="background-color: var(--action-rev-trim);"> default</div>
+  <div class="swatch" title="trim (hover)" style="background-color: var(--action-rev-trim-hover);"> hover</div>
+  <div class="swatch" title="trim (pressed)" style="background-color: var(--action-rev-trim-pressed);"> pressed</div>
+  <div class="swatch" title="trim (focus)" style="background-color: var(--action-rev-trim-focus);"> focus</div>
+  <div class="swatch" title="trim (disabled)" style="background-color: var(--action-rev-trim-disabled);"> disabled</div>
+</div>
+<h3>surface</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface" style="background-color: var(--action-rev-surface);"> default</div>
+  <div class="swatch" title="surface (hover)" style="background-color: var(--action-rev-surface-hover);"> hover</div>
+  <div class="swatch" title="surface (pressed)" style="background-color: var(--action-rev-surface-pressed);"> pressed</div>
+  <div class="swatch" title="surface (focus)" style="background-color: var(--action-rev-surface-focus);"> focus</div>
+  <div class="swatch" title="surface (disabled)" style="background-color: var(--action-rev-surface-disabled);"> disabled</div>
+</div>
+<h3>surface-low</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface-low" style="background-color: var(--action-rev-surface-low);"> default</div>
+  <div class="swatch" title="surface-low (hover)" style="background-color: var(--action-rev-surface-low-hover);"> hover</div>
+  <div class="swatch" title="surface-low (pressed)" style="background-color: var(--action-rev-surface-low-pressed);"> pressed</div>
+  <div class="swatch" title="surface-low (focus)" style="background-color: var(--action-rev-surface-low-focus);"> focus</div>
+  <div class="swatch" title="surface-low (disabled)" style="background-color: var(--action-rev-surface-low-disabled);"> disabled</div>
+</div>
+<h3>surface-high</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface-high" style="background-color: var(--action-rev-surface-high);"> default</div>
+  <div class="swatch" title="surface-high (hover)" style="background-color: var(--action-rev-surface-high-hover);"> hover</div>
+  <div class="swatch" title="surface-high (pressed)" style="background-color: var(--action-rev-surface-high-pressed);"> pressed</div>
+  <div class="swatch" title="surface-high (focus)" style="background-color: var(--action-rev-surface-high-focus);"> focus</div>
+  <div class="swatch" title="surface-high (disabled)" style="background-color: var(--action-rev-surface-high-disabled);"> disabled</div>
+</div>
+<h3>surface-bg</h3>
+<div class="color-role-swatches">
+  <div class="swatch" title="surface-bg" style="background-color: var(--action-rev-surface-bg);"> default</div>
+  <div class="swatch" title="surface-bg (hover)" style="background-color: var(--action-rev-surface-bg-hover);"> hover</div>
+  <div class="swatch" title="surface-bg (pressed)" style="background-color: var(--action-rev-surface-bg-pressed);"> pressed</div>
+  <div class="swatch" title="surface-bg (focus)" style="background-color: var(--action-rev-surface-bg-focus);"> focus</div>
+  <div class="swatch" title="surface-bg (disabled)" style="background-color: var(--action-rev-surface-bg-disabled);"> disabled</div>
+</div>
+</section>
+</main>
+</body>
+</html>

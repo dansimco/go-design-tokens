@@ -48,10 +48,9 @@ func main() {
 	//
 
 	neutral := color.Mode{}
-	neutral.AddRole("content", color.Role{
-		Default: color.UIColor{Light: ink.At(0.3), Dark: ink.At(0.8)},
-		Hover:   color.UIColor{Light: ink.At(0.28), Dark: ink.At(0.78)},
-	})
+	content := neutral.AddRole("content")
+	content.AddState("default", color.UIColor{Light: ink.At(1), Dark: ink.At(1)})
+	content.AddState("hover", color.UIColor{Light: ink.At(0.28), Dark: ink.At(0.78)})
 
 }
 

@@ -1,6 +1,7 @@
 package color
 
 type UIColor struct {
+	Name  string
 	Light LABColor
 	Dark  LABColor
 }

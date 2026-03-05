@@ -1,12 +1,20 @@
 package color
 
 type Role struct {
-	Name     string
-	Default  UIColor
-	Hover    UIColor
-	Pressed  UIColor
-	Focus    UIColor
-	Disabled UIColor
+	Name   string
+	States []UIColor
+}
+
+func NewRole(name string) *Role {
+	return &Role{
+		Name:   name,
+		States: []UIColor{},
+	}
+}
+
+func (r *Role) AddState(state string, color UIColor) {
+	color.Name = state
+	r.States = append(r.States, color)
 }
 
 func (r *Role) toCSS(prepend string) string {
@@ -16,10 +24,14 @@ func (r *Role) toCSS(prepend string) string {
 	} else {
 		prepend = prepend + "-"
 	}
-	css += prepend + r.Name + ": " + r.Default.ToCSSLightDark() + ";\n"
-	css += prepend + r.Name + "-hover: " + r.Hover.ToCSSLightDark() + ";\n"
-	css += prepend + r.Name + "-pressed: " + r.Pressed.ToCSSLightDark() + ";\n"
-	css += prepend + r.Name + "-focus: " + r.Focus.ToCSSLightDark() + ";\n"
-	css += prepend + r.Name + "-disabled: " + r.Disabled.ToCSSLightDark() + ";\n"
+
+	for _, state := range r.States {
+		if state.Name == "default" {
+			css += prepend + r.Name + ": " + state.ToCSSLightDark() + ";\n"
+		} else {
+			css += prepend + r.Name + "-" + state.Name + ": " + state.ToCSSLightDark() + ";\n"
+		}
+	}
+
 	return css
 }
