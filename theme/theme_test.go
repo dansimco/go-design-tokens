@@ -9,6 +9,15 @@ import (
 func TestThemeCSS(t *testing.T) {
 	theme := NewTheme()
 
+	theme.SpacePrefix = "sp-"
+	theme.AddSpaceToken("2xs", 0.25)
+	theme.AddSpaceToken("xs", 0.5)
+	theme.AddSpaceToken("s", 1)
+	theme.AddSpaceToken("m", 1.5)
+	theme.AddSpaceToken("l", 2)
+	theme.AddSpaceToken("xl", 3)
+	theme.AddSpaceToken("2xl", 4)
+
 	ink := color.NewRamp()
 	ink.AddKey("#FEFCFF", 0)
 	ink.AddKey("#64617A", 0.562)

@@ -1,13 +1,21 @@
 package theme
 
-import "go-ds/color"
+import (
+	"go-ds/color"
+	"go-ds/radius"
+	"go-ds/spacing"
+	"strconv"
+)
 
 type Theme struct {
-	BaseSize     int
-	SpacePrefix  string
-	RadiusPrefix string
-	ColorPrefix  string
-	ColorModes   []color.Mode
+	BaseSpacingUnit int
+	GridDivision    float64
+	SpacePrefix     string
+	SpaceTokens     []spacing.NamedSpace
+	RadiusPrefix    string
+	RadiusTokens    []radius.NamedRadius
+	ColorPrefix     string
+	ColorModes      []color.Mode
 }
 
 func NewTheme() Theme {
@@ -20,8 +28,29 @@ func (t *Theme) AddColorMode(name string) *color.Mode {
 	return &t.ColorModes[len(t.ColorModes)-1]
 }
 
+func (t *Theme) AddRadiusToken(name string, unitMultiple float64) {
+	t.RadiusTokens = append(t.RadiusTokens, radius.NamedRadius{Name: name, UnitMultiple: unitMultiple})
+}
+
+func (t *Theme) AddSpaceToken(name string, unitMultiple float64) {
+	t.SpaceTokens = append(t.SpaceTokens, spacing.NamedSpace{Name: name, UnitMultiple: unitMultiple})
+}
+
 func (t *Theme) ToCSS() string {
 	css := ":root {\n"
+
+	// spacing tokens
+	for _, spaceToken := range t.SpaceTokens {
+		css += `  --` + t.SpacePrefix + `-` + spaceToken.Name + `: ` + strconv.FormatFloat(spaceToken.UnitMultiple, 'f', -1, 64) + `rem;` + "\n"
+	}
+	if t.GridDivision == 0 {
+		t.GridDivision = 0.25
+	}
+	css += `  --` + t.SpacePrefix + `0: 0;` + "\n"
+	for i := 1; i <= 32; i++ {
+		css += `  --` + t.SpacePrefix + strconv.Itoa(i) + `: ` + strconv.FormatFloat(float64(i)*t.GridDivision, 'f', -1, 64) + `rem;` + "\n"
+	}
+	// color tokens
 	for _, mode := range t.ColorModes {
 		css += mode.ToCSS()
 	}
@@ -29,41 +58,21 @@ func (t *Theme) ToCSS() string {
 	return css
 }
 
-// example html
-// <html lang="en">
-// <head>
-//   <style>
-//
-//   /* :root css vars go here */
-//
-//    body {
-//      font-family: 'arial';
-//    }
-//    .color-role-swatches {
-//      display: flex;
-//      gap: 0.25rem;
-//
-//      & .swatch {
-//        flex-grow: 2;
-//        aspect-ratio: 1;
-//      }
+func (t *Theme) GetSpacingValues(n int) []float64 {
+	if t.BaseSpacingUnit == 0 {
+		t.BaseSpacingUnit = 16
+	}
+	values := []float64{}
 
-//    }
-//
-//   </style>
-// </head>
-// <body>
-// <main>
-// <section id="colors">
-// <h2>Color Mode Name</h2>
-// <h3>Color Role Name</h3>
-// <div class="color-role-swatches">
-//   <div-class="swatch" title="role-name" style="background-color: var(--role-variable-name);></div>
-// </div>
-// </section>
-// </main>
-// </body>
-// </html>
+	values = append(values, float64(t.BaseSpacingUnit/4))
+	values = append(values, float64(t.BaseSpacingUnit/2))
+
+	for i := 1; i <= n; i++ {
+		values = append(values, float64(i*t.BaseSpacingUnit))
+	}
+
+	return values
+}
 
 func (t *Theme) GenerateHTMLPreview() string {
 	html := `<html lang="en">
