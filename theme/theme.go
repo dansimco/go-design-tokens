@@ -109,7 +109,7 @@ func (t *Theme) GenerateHTMLPreview() string {
    .mode-preview {
    	font-size: 0.7rem;
     overflow: hidden;
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
 
     & .bg-container {
     	padding: 0.5rem;
@@ -129,10 +129,10 @@ func (t *Theme) GenerateHTMLPreview() string {
 	// Generate color swatches for each mode
 	for _, mode := range t.ColorModes {
 		html += "<h2>" + mode.Name + "</h2>\n"
-		html += `<div class="mode-preview">`
+		html += `<div class="mode-preview" style="border: 0.5px solid var(--` + mode.Name + `-` + `trim); border-bottom: none;">`
 		for _, role := range mode.Roles {
 			if role.Context == "background" {
-				html += `<div class="bg-container" style="background-color: var(--` + mode.Name + `-` + role.Name + `);">`
+				html += `<div class="bg-container" style="background-color: var(--` + mode.Name + `-` + role.Name + `); border-bottom: 0.5px solid var(--` + mode.Name + `-` + `trim);">`
 
 				for _, fg_role := range mode.Roles {
 					if fg_role.Context == "foreground" {
