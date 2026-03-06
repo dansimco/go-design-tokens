@@ -1,8 +1,9 @@
 package color
 
 type Role struct {
-	Name   string
-	States []UIColor
+	Name    string
+	Context string // fg, bg
+	States  []UIColor
 }
 
 func NewRole(name string) *Role {
