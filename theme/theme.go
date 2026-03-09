@@ -4,6 +4,7 @@ import (
 	"go-ds/color"
 	"go-ds/radius"
 	"go-ds/spacing"
+	"go-ds/typography"
 	"strconv"
 )
 
@@ -16,6 +17,8 @@ type Theme struct {
 	RadiusTokens    []radius.NamedRadius
 	ColorPrefix     string
 	ColorModes      []color.Mode
+	TypeFamilies    []typography.Family
+	TypeStyles      []typography.Style
 }
 
 func NewTheme() Theme {
@@ -36,8 +39,28 @@ func (t *Theme) AddSpaceToken(name string, unitMultiple float64) {
 	t.SpaceTokens = append(t.SpaceTokens, spacing.NamedSpace{Name: name, UnitMultiple: unitMultiple})
 }
 
+func (t *Theme) AddTypeFamily(name string) *typography.Family {
+	family := typography.Family{
+		Name: name,
+	}
+	t.TypeFamilies = append(t.TypeFamilies, family)
+	return &family
+}
+
+func (t *Theme) AddTypeStyle(name string) *typography.Style {
+	style := typography.Style{
+		Name: name,
+	}
+	t.TypeStyles = append(t.TypeStyles, style)
+	return &style
+}
+
 func (t *Theme) ToCSS() string {
 	css := ":root {\n"
+
+	// typography tokens
+	for _, family := range t.F
+
 
 	// spacing tokens
 	for _, spaceToken := range t.SpaceTokens {
@@ -113,6 +136,10 @@ func (t *Theme) GenerateHTMLPreview() string {
      margin-top: 1rem;
      margin-bottom: 0.5rem;
      font-size: 1rem;
+   }
+
+   strong {
+   font-weight: 500;
    }
 
    .mode-preview {

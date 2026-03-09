@@ -8,6 +8,41 @@ import (
 
 func TestThemeCSS(t *testing.T) {
 	theme := NewTheme()
+	theme.BaseSpacingUnit = 16 //
+
+	// typography
+
+	f_innovator := theme.AddTypeFamily("Innovator Grotesk")
+	innovator_regular := f_innovator.AddFont()
+	innovator_regular.AddSrc("/assets/fonts/InnovatorGroteskRegular.otf")
+
+	innovator_regular_italic := f_innovator.AddFont()
+	innovator_regular_italic.AddSrc("/assets/fonts/InnovatorGroteskItalic.otf")
+
+	innovator_regular_medium := f_innovator.AddFont()
+	innovator_regular_medium.AddSrc("/assets/fonts/InnovatorGroteskMedium.otf")
+	innovator_regular_medium.Weight = "medium"
+	innovator_regular_medium.WeightNumber = 500
+
+	innovator_regular_medium_italic := f_innovator.AddFont()
+	innovator_regular_medium_italic.Src = "/assets/fonts/InnovatorGroteskMediumItalic.otf"
+	innovator_regular_medium_italic.Weight = "medium"
+	innovator_regular_medium_italic.Style = "italic"
+	innovator_regular_medium_italic.WeightNumber = 500
+
+	t_body := theme.AddTypeStyle("body")
+	t_body.Family = f_innovator
+	t_body.Size = 0.9
+	t_body.Weight = "regular"
+	t_body.LineHeight = 1.5
+
+	t_caption := theme.AddTypeStyle("body")
+	t_caption.Family = f_innovator
+	t_caption.Size = 0.875
+	t_caption.Weight = "regular"
+	t_caption.LineHeight = 1.5
+
+	// spacing
 
 	theme.SpacePrefix = "sp-"
 	theme.AddSpaceToken("2xs", 0.25)
