@@ -1,0 +1,48 @@
+@font-face {
+    font-family: "Helvetica Now";
+    src: local("Helvetica Now"), url("/assets/fonts/helvetica_now_regular.woff2");
+    weight: 400;
+}
+
+@font-face {
+    font-family: "Helvetica Now";
+    src: local("Helvetica Now"), url("/assets/fonts/helvetica_now_bold.woff2");
+    weight: 600;
+}
+
+:root {
+    --my-bg-color: #ff9c00;
+    --sp-1: 0.75rem;
+}
+
+body {
+    color-scheme: light dark;
+    background-color: var(--my-bg-color);
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes identifier {
+    0% {
+        top: 0;
+        left: 0;
+    }
+    30% {
+        top: 50px;
+    }
+    68%,
+    72% {
+        left: 50px;
+    }
+    100% {
+        top: 100px;
+        left: 100%;
+    }
+}
