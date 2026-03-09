@@ -25,7 +25,7 @@ func TestThemeCSS(t *testing.T) {
 	innovator_regular_medium.WeightNumber = 500
 
 	innovator_regular_medium_italic := f_innovator.AddFont()
-	innovator_regular_medium_italic.Src = "/assets/fonts/InnovatorGroteskMediumItalic.otf"
+	innovator_regular_medium_italic.AddSrc("/assets/fonts/InnovatorGroteskMediumItalic.otf")
 	innovator_regular_medium_italic.Weight = "medium"
 	innovator_regular_medium_italic.Style = "italic"
 	innovator_regular_medium_italic.WeightNumber = 500

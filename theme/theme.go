@@ -58,10 +58,6 @@ func (t *Theme) AddTypeStyle(name string) *typography.Style {
 func (t *Theme) ToCSS() string {
 	css := ":root {\n"
 
-	// typography tokens
-	for _, family := range t.F
-
-
 	// spacing tokens
 	for _, spaceToken := range t.SpaceTokens {
 		css += `  --` + t.SpacePrefix + `-` + spaceToken.Name + `: ` + strconv.FormatFloat(spaceToken.UnitMultiple, 'f', -1, 64) + `rem;` + "\n"
