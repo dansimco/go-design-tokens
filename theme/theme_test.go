@@ -18,7 +18,7 @@ func TestThemeCSS(t *testing.T) {
 	innovator_regular := f_innovator.AddFont()
 	innovator_regular.AddLocalSrc("Innovator Grotesk")
 	innovator_regular.AddSrc("/assets/fonts/InnovatorGroteskRegular.otf")
-	innovator_regular.SetWeight("regular")
+	innovator_regular.SetWeight("normal")
 
 	innovator_regular_italic := f_innovator.AddFont()
 	innovator_regular_italic.AddLocalSrc("Innovator Grotesk")
@@ -27,26 +27,26 @@ func TestThemeCSS(t *testing.T) {
 	innovator_regular_medium := f_innovator.AddFont()
 	innovator_regular.AddLocalSrc("Innovator Grotesk")
 	innovator_regular_medium.AddSrc("/assets/fonts/InnovatorGroteskMedium.otf")
-	innovator_regular_medium.Weight = "medium"
+	innovator_regular_medium.Weight = "normal"
 	innovator_regular_medium.WeightNumber = 500
 
 	innovator_regular_medium_italic := f_innovator.AddFont()
 	innovator_regular.AddLocalSrc("Innovator Grotesk")
 	innovator_regular_medium_italic.AddSrc("/assets/fonts/InnovatorGroteskMediumItalic.otf")
-	innovator_regular_medium_italic.SetWeight("medium")
+	innovator_regular_medium_italic.SetWeight("normal")
 	innovator_regular_medium_italic.SetStyle("italic")
 	innovator_regular_medium_italic.SetWeightNumber(500)
 
 	t_body := theme.AddTypeStyle("body")
 	t_body.SetFamily(f_innovator)
 	t_body.SetSize(0.9)
-	t_body.SetWeight("regular")
+	t_body.SetWeight("normal")
 	t_body.SetLineHeight(1.5)
 
 	t_caption := theme.AddTypeStyle("caption")
 	t_caption.SetFamily(f_innovator)
 	t_caption.SetSize(0.875)
-	t_caption.SetWeight("regular")
+	t_caption.SetWeight("normal")
 	t_caption.SetLineHeight(1.5)
 
 	// spacing

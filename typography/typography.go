@@ -20,9 +20,9 @@ func NewFontFamily(name string) Family {
 
 func (f *Family) AddFont() *Font {
 	font := Font{
-		Weight:       "normal",
-		Style:        "regular",
-		WeightNumber: 400,
+		Weight:            "normal",
+		Style:             "normal",
+		UseNumberedWeight: false,
 	}
 	f.Fonts = append(f.Fonts, font)
 	return &f.Fonts[len(f.Fonts)-1]
@@ -65,26 +65,16 @@ func (f *Family) ToCSS() string {
 			css += "\n"
 		}
 
-		css += "      font-weight: "
-		if font.Weight != "" && font.Weight != "normal" {
-			// Use the Weight string field with quotes
-			css += "\"" + font.Weight + "\""
-		} else if font.WeightNumber != 0 {
-			// Convert int to string properly
-			weightStr := ""
-			num := font.WeightNumber
-			for num > 0 {
-				weightStr = string(rune(num%10+'0')) + weightStr
-				num /= 10
-			}
-			css += weightStr
-		} else {
-			css += "400"
+		if font.UseNumberedWeight && font.WeightNumber != 0 {
+			css += `  font-weight: ` + string(font.WeightNumber) + ";\n"
 		}
-		css += ";\n"
+
+		if !font.UseNumberedWeight && font.Weight != "" {
+			css += "  font-weight: " + font.Weight + ";\n"
+		}
 
 		// Add font-style if specified
-		if font.Style != "" && font.Style != "normal" && font.Style != "regular" {
+		if font.Style != "" {
 			css += "      font-style: " + font.Style + ";\n"
 		}
 
@@ -102,11 +92,12 @@ func (f *Family) ToCSS() string {
 }
 
 type Font struct {
-	src          []string
-	localSrc     []string
-	Weight       string
-	WeightNumber int
-	Style        string
+	src               []string
+	localSrc          []string
+	Weight            string
+	WeightNumber      int
+	UseNumberedWeight bool
+	Style             string
 }
 
 func (f *Font) AddSrc(src string) {
@@ -130,14 +121,16 @@ func (f *Font) SetStyle(style string) {
 }
 
 type Style struct {
-	Name       string
-	Family     *Family
-	Size       float32
-	LineHeight float32
-	Tracking   float32
-	Weight     string
-	Style      string
-	cssClass   string
+	Name              string
+	Family            *Family
+	Size              float32
+	LineHeight        float32
+	Tracking          float32
+	Weight            string
+	WeightNumber      int
+	Style             string
+	cssClass          string
+	UseNumberedWeight bool
 }
 
 func NewTypeStyle(name string) Style {
@@ -169,6 +162,12 @@ func (s *Style) SetTracking(tracking float32) {
 
 func (s *Style) SetWeight(weight string) {
 	s.Weight = weight
+	s.UseNumberedWeight = false
+}
+
+func (s *Style) SetWeightNumber(weight int) {
+	s.WeightNumber = weight
+	s.UseNumberedWeight = true
 }
 
 func (s *Style) SetStyle(style string) {
@@ -209,12 +208,17 @@ func (s *Style) ToCSS() string {
 	}
 
 	// Add font-weight if specified
-	if s.Weight != "" {
-		css += "  font-weight: " + s.Weight + ";\n"
+
+	if s.UseNumberedWeight && s.WeightNumber != 0 {
+		css += `  font-weight: ` + string(s.WeightNumber) + ";\n"
+	}
+
+	if !s.UseNumberedWeight && s.Weight != "" {
+		css += `  font-weight: ` + s.Weight + ";\n"
 	}
 
 	// Add font-style if specified
-	if s.Style != "" && s.Style != "normal" && s.Style != "regular" {
+	if s.Style != "" {
 		css += "  font-style: " + s.Style + ";\n"
 	}
 
