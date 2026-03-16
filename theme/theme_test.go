@@ -114,7 +114,7 @@ func TestThemeCSS(t *testing.T) {
 	// highlight
 	neutral_highlight := neutral.AddRole("content-highlight")
 	neutral_highlight.SetContext("foreground")
-	neutral_highlight.AddState("default", color.UIColor{Light: ink.At(1), Dark: ink.At(0.1)})
+	neutral_highlight.AddState("default", color.NewUIColor(ink.At(1), ink.At(0.1)))
 	neutral_highlight.AddState("hover", color.UIColor{Light: ink.At(0.8), Dark: ink.At(0.2)})
 	neutral_highlight.AddState("pressed", color.UIColor{Light: ink.At(0.7), Dark: ink.At(0.2)})
 	neutral_highlight.AddState("focus", color.UIColor{Light: ink.At(0.6), Dark: ink.At(0.2)})
