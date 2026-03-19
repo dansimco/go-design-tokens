@@ -76,6 +76,24 @@ func (t *Theme) ToCSS() string {
 
 	css += ":root {\n"
 
+	// type style tokens
+	typePrefix := ""
+	if t.TypePrefix != "" {
+		typePrefix = t.TypePrefix[:len(t.TypePrefix)-1]
+	}
+	for _, style := range t.TypeStyles {
+		styleVars := style.ToCSSVars(typePrefix)
+		if styleVars != "" {
+			// Indent each line
+			for i := 0; i < len(styleVars); i++ {
+				if i == 0 || styleVars[i-1] == '\n' {
+					css += "  "
+				}
+				css += string(styleVars[i])
+			}
+		}
+	}
+
 	// radius tokens
 	for _, radiusToken := range t.RadiusTokens {
 		css += `  --` + t.RadiusPrefix + radiusToken.Name + `: ` + strconv.FormatFloat(radiusToken.UnitMultiple, 'f', -1, 64) + `rem;` + "\n"
