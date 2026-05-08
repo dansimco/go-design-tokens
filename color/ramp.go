@@ -77,3 +77,22 @@ func (ramp *Ramp) At(position float64) LABColor {
 		B: lowerKey.Color.B + (upperKey.Color.B-lowerKey.Color.B)*t,
 	}
 }
+
+
+type swatch struct {
+	Color LABColor
+	Position float64
+}
+
+func (r* Ramp) CreateSwatches(count int) []swatch {
+	colors := []swatch{}
+
+	for i := 0; i < count; i++ {
+		position := float64(i) / float64(count-1)
+		colors = append(colors, swatch{
+			Color:    r.At(position),
+			Position: position,
+		})
+	}
+	return colors
+}

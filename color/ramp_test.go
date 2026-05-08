@@ -25,6 +25,12 @@ func TestGeneratingColor(t *testing.T) {
 		t.Errorf("Expected colorEnd.ToHex() to equal #FFFFFF, got %s", color.ToHex())
 	}
 
+	swatches := ramp.CreateSwatches(16)
+
+	for _, swatch := range swatches {
+		fmt.Println("<div style=\"background-color:" + swatch.Color.ToHex() + ";\" title=\"" + fmt.Sprintf("%f", swatch.Position) + "\">&nbsp;</div>")
+	}
+
 }
 
 func TestOrangeRamp(t *testing.T) {

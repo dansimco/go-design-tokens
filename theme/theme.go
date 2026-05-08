@@ -3,11 +3,18 @@ package theme
 import (
 	"strconv"
 
+	"fmt"
+
 	"github.com/dansimco/go-design-tokens/color"
 	"github.com/dansimco/go-design-tokens/radius"
 	"github.com/dansimco/go-design-tokens/spacing"
 	"github.com/dansimco/go-design-tokens/typography"
 )
+
+type NamedRamp struct {
+	Name string
+	Ramp color.Ramp
+}
 
 type Theme struct {
 	BaseSpacingUnit int
@@ -21,6 +28,7 @@ type Theme struct {
 	TypePrefix      string
 	TypeFamilies    []typography.Family
 	TypeStyles      []typography.Style
+	Ramps           []NamedRamp
 }
 
 func New() Theme {
@@ -33,6 +41,10 @@ func New() Theme {
 		GridDivision:    0.25,
 	}
 	return t
+}
+
+func (t *Theme) AddRamp(name string, ramp color.Ramp) {
+	t.Ramps = append(t.Ramps, NamedRamp{Name: name, Ramp: ramp})
 }
 
 func (t *Theme) AddColorMode(name string) *color.Mode {
@@ -238,6 +250,30 @@ func (t *Theme) GenerateHTMLPreview() string {
 
 			html += "</div>\n"
 		}
+	}
+
+	// Generate ramp swatches
+	if len(t.Ramps) > 0 {
+		html += `<section id="ramps">
+<h2>Ramps</h2>
+<style>
+  .ramp-swatches { display: flex; height: 2rem; margin-bottom: 0.5rem; border-radius: 0.25rem; overflow: hidden; }
+  .ramp-swatches .swatch { flex: 1; }
+  .ramp-label { font-size: 0.75rem; margin-bottom: 1.5rem; color: #888; }
+</style>
+`
+		for _, nr := range t.Ramps {
+			swatches := nr.Ramp.CreateSwatches(32)
+			html += "<h3>" + nr.Name + "</h3>\n"
+			html += `<div class="ramp-swatches">` + "\n"
+			for _, s := range swatches {
+				hex := s.Color.ToHex()
+				html += fmt.Sprintf(`  <div class="swatch" style="background-color:%s;" title="%.3f %s"></div>`+"\n", hex, s.Position, hex)
+			}
+			html += "</div>\n"
+			html += `<div class="ramp-label">` + fmt.Sprintf("%d swatches", len(swatches)) + "</div>\n"
+		}
+		html += "</section>\n"
 	}
 
 	html += `</section>
