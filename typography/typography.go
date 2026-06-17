@@ -66,7 +66,9 @@ func (f *Family) ToCSS() string {
 
 		// Only emit src if there's at least one source, and always
 		// terminate the last entry with a semicolon.
-		if len(srcEntries) > 0 {
+		if len(srcEntries) == 1 {
+			css += "\t  src: " + srcEntries[0] + ";\n"
+		} else if len(srcEntries) > 1 {
 			css += "\t  src:\n"
 			for j, entry := range srcEntries {
 				css += "        " + entry
