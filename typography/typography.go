@@ -2,6 +2,7 @@ package typography
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/dansimco/go-design-tokens/css_util"
 )
@@ -43,26 +44,39 @@ func (f *Family) ToCSS() string {
 		}
 		css += "@font-face {\n"
 		css += "\t  font-family: \"" + f.Name + "\";\n"
-		css += "\t  src:\n"
+
+		var srcEntries []string
 
 		// Add local sources
 		for _, local := range font.localSrc {
-			css += "        local(\"" + local + "\"),\n"
+			srcEntries = append(srcEntries, "local(\""+local+"\")")
 		}
 
 		// Add URL sources
-		for j, src := range font.src {
-			// Add .woff2 extension if not present
-			if len(src) < 6 || src[len(src)-6:] != ".woff2" {
+		for _, src := range font.src {
+			// Replace any existing extension with .woff2
+			if !strings.HasSuffix(src, ".woff2") {
+				if idx := strings.LastIndex(src, "."); idx != -1 && idx > strings.LastIndex(src, "/") {
+					src = src[:idx]
+				}
 				src += ".woff2"
 			}
-			css += "        url(\"" + src + "\")"
-			if j < len(font.src)-1 {
-				css += ","
-			} else {
-				css += ";"
+			srcEntries = append(srcEntries, "url(\""+src+"\")")
+		}
+
+		// Only emit src if there's at least one source, and always
+		// terminate the last entry with a semicolon.
+		if len(srcEntries) > 0 {
+			css += "\t  src:\n"
+			for j, entry := range srcEntries {
+				css += "        " + entry
+				if j < len(srcEntries)-1 {
+					css += ","
+				} else {
+					css += ";"
+				}
+				css += "\n"
 			}
-			css += "\n"
 		}
 
 		if font.UseNumberedWeight && font.WeightNumber != 0 {
