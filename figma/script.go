@@ -145,35 +145,32 @@ func buildRadiusVars(data *pluginScriptData, t *theme.Theme, baseUnit float64) {
 
 func buildTypoVars(data *pluginScriptData, t *theme.Theme, baseUnit float64) {
 	for _, style := range t.TypeStyles {
-		prefix := style.Name + "/"
+		r := style.Resolve()
+		prefix := r.Name + "/"
 
-		if style.Family != nil && style.Family.Name != "" {
+		if r.FamilyName != "" {
 			data.TypoVars = append(data.TypoVars, pluginTypoVar{
-				Name: prefix + "font-family", VarType: "STRING", Value: style.Family.Name,
+				Name: prefix + "font-family", VarType: "STRING", Value: r.FamilyName,
 			})
 		}
-		if style.Size > 0 {
+		if r.SizeRem > 0 {
 			data.TypoVars = append(data.TypoVars, pluginTypoVar{
-				Name: prefix + "font-size", VarType: "FLOAT", Value: float64(style.Size) * baseUnit,
+				Name: prefix + "font-size", VarType: "FLOAT", Value: r.SizeRem * baseUnit,
 			})
 		}
-		if style.LineHeight > 0 {
+		if r.LineHeightRem > 0 {
 			data.TypoVars = append(data.TypoVars, pluginTypoVar{
-				Name: prefix + "line-height", VarType: "FLOAT", Value: float64(style.LineHeight) * baseUnit,
+				Name: prefix + "line-height", VarType: "FLOAT", Value: r.LineHeightRem * baseUnit,
 			})
 		}
-		if style.Tracking != 0 {
+		if r.TrackingRem != 0 {
 			data.TypoVars = append(data.TypoVars, pluginTypoVar{
-				Name: prefix + "letter-spacing", VarType: "FLOAT", Value: float64(style.Tracking) * baseUnit,
+				Name: prefix + "letter-spacing", VarType: "FLOAT", Value: r.TrackingRem * baseUnit,
 			})
 		}
-		if style.UseNumberedWeight && style.WeightNumber != 0 {
+		if r.Weight != 0 {
 			data.TypoVars = append(data.TypoVars, pluginTypoVar{
-				Name: prefix + "font-weight", VarType: "FLOAT", Value: float64(style.WeightNumber),
-			})
-		} else if !style.UseNumberedWeight && style.Weight != "" {
-			data.TypoVars = append(data.TypoVars, pluginTypoVar{
-				Name: prefix + "font-weight", VarType: "STRING", Value: style.Weight,
+				Name: prefix + "font-weight", VarType: "FLOAT", Value: float64(r.Weight),
 			})
 		}
 	}

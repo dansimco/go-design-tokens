@@ -175,69 +175,61 @@ func mapTypography(body *PublishVariablesBody, t *theme.Theme, baseUnit float64)
 	})
 
 	for _, style := range t.TypeStyles {
-		prefix := style.Name + "/"
+		r := style.Resolve()
+		prefix := r.Name + "/"
 
-		if style.Family != nil && style.Family.Name != "" {
-			varID := "$var:type-" + style.Name + "-family"
+		if r.FamilyName != "" {
+			varID := "$var:type-" + r.Name + "-family"
 			body.Variables = append(body.Variables, VariableChange{
 				Action: "CREATE", ID: varID,
 				Name: prefix + "font-family", VariableCollectionID: collID, ResolvedType: "STRING",
 			})
 			body.VariableModeValues = append(body.VariableModeValues, VariableModeValue{
-				VariableID: varID, ModeID: modeID, Value: style.Family.Name,
+				VariableID: varID, ModeID: modeID, Value: r.FamilyName,
 			})
 		}
 
-		if style.Size > 0 {
-			varID := "$var:type-" + style.Name + "-size"
+		if r.SizeRem > 0 {
+			varID := "$var:type-" + r.Name + "-size"
 			body.Variables = append(body.Variables, VariableChange{
 				Action: "CREATE", ID: varID,
 				Name: prefix + "font-size", VariableCollectionID: collID, ResolvedType: "FLOAT",
 			})
 			body.VariableModeValues = append(body.VariableModeValues, VariableModeValue{
-				VariableID: varID, ModeID: modeID, Value: float64(style.Size) * baseUnit,
+				VariableID: varID, ModeID: modeID, Value: r.SizeRem * baseUnit,
 			})
 		}
 
-		if style.LineHeight > 0 {
-			varID := "$var:type-" + style.Name + "-lh"
+		if r.LineHeightRem > 0 {
+			varID := "$var:type-" + r.Name + "-lh"
 			body.Variables = append(body.Variables, VariableChange{
 				Action: "CREATE", ID: varID,
 				Name: prefix + "line-height", VariableCollectionID: collID, ResolvedType: "FLOAT",
 			})
 			body.VariableModeValues = append(body.VariableModeValues, VariableModeValue{
-				VariableID: varID, ModeID: modeID, Value: float64(style.LineHeight) * baseUnit,
+				VariableID: varID, ModeID: modeID, Value: r.LineHeightRem * baseUnit,
 			})
 		}
 
-		if style.Tracking != 0 {
-			varID := "$var:type-" + style.Name + "-tracking"
+		if r.TrackingRem != 0 {
+			varID := "$var:type-" + r.Name + "-tracking"
 			body.Variables = append(body.Variables, VariableChange{
 				Action: "CREATE", ID: varID,
 				Name: prefix + "letter-spacing", VariableCollectionID: collID, ResolvedType: "FLOAT",
 			})
 			body.VariableModeValues = append(body.VariableModeValues, VariableModeValue{
-				VariableID: varID, ModeID: modeID, Value: float64(style.Tracking) * baseUnit,
+				VariableID: varID, ModeID: modeID, Value: r.TrackingRem * baseUnit,
 			})
 		}
 
-		if style.UseNumberedWeight && style.WeightNumber != 0 {
-			varID := "$var:type-" + style.Name + "-weight"
+		if r.Weight != 0 {
+			varID := "$var:type-" + r.Name + "-weight"
 			body.Variables = append(body.Variables, VariableChange{
 				Action: "CREATE", ID: varID,
 				Name: prefix + "font-weight", VariableCollectionID: collID, ResolvedType: "FLOAT",
 			})
 			body.VariableModeValues = append(body.VariableModeValues, VariableModeValue{
-				VariableID: varID, ModeID: modeID, Value: float64(style.WeightNumber),
-			})
-		} else if !style.UseNumberedWeight && style.Weight != "" {
-			varID := "$var:type-" + style.Name + "-weight"
-			body.Variables = append(body.Variables, VariableChange{
-				Action: "CREATE", ID: varID,
-				Name: prefix + "font-weight", VariableCollectionID: collID, ResolvedType: "STRING",
-			})
-			body.VariableModeValues = append(body.VariableModeValues, VariableModeValue{
-				VariableID: varID, ModeID: modeID, Value: style.Weight,
+				VariableID: varID, ModeID: modeID, Value: float64(r.Weight),
 			})
 		}
 	}

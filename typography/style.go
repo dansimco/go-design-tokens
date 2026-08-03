@@ -2,164 +2,158 @@ package typography
 
 import (
 	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/dansimco/go-design-tokens/css_util"
 )
 
 type Style struct {
-	Name              string
-	Family            *Family
-	Size              float32
-	LineHeight        float32
-	Tracking          float32
-	Weight            string
-	WeightNumber      int
-	Style             string
-	cssClass          string
-	UseNumberedWeight bool
+	Name       string
+	Family     *Family
+	Size       float64
+	LineHeight float64
+	Tracking   float64
+	Weight     int // 0 = unset; use the Weight* constants
+	Style      string
+	cssClass   string
+}
+
+// Resolved is a platform-neutral snapshot of a Style with every value
+// reduced to plain data, so renderers (CSS, Figma, iOS, Android) can
+// format tokens without re-deriving any logic. Rem values are relative
+// to the theme's base unit (1rem = BaseSpacingUnit px).
+type Resolved struct {
+	Name          string
+	ClassName     string
+	FamilyName    string
+	FallbackFonts []string
+	SizeRem       float64
+	LineHeightRem float64
+	TrackingRem   float64
+	Weight        int // 0 = unset
+	FontStyle     string
+}
+
+var invalidNameChars = regexp.MustCompile(`[^a-z0-9_-]+`)
+
+// sanitizeName makes a style name safe for use as a CSS class name,
+// custom property name, and cross-platform token identifier.
+func sanitizeName(name string) string {
+	name = strings.ToLower(strings.TrimSpace(name))
+	name = invalidNameChars.ReplaceAllString(name, "-")
+	return strings.Trim(name, "-")
 }
 
 func NewTypeStyle(name string) Style {
-	s := Style{
-		Name: name,
+	return Style{
+		Name: sanitizeName(name),
 	}
-	return s
 }
 
 func (s *Style) SetCSSClass(className string) {
-	s.cssClass = className
+	s.cssClass = sanitizeName(className)
 }
 
 func (s *Style) SetFamily(f *Family) {
 	s.Family = f
 }
 
-func (s *Style) SetSize(size float32) {
+func (s *Style) SetSize(size float64) {
 	s.Size = size
 }
 
-func (s *Style) SetLineHeight(lineHeight float32) {
+func (s *Style) SetLineHeight(lineHeight float64) {
 	s.LineHeight = lineHeight
 }
 
-func (s *Style) SetTracking(tracking float32) {
+func (s *Style) SetTracking(tracking float64) {
 	s.Tracking = tracking
 }
 
 func (s *Style) SetWeight(weight string) {
-	s.Weight = weight
-	s.UseNumberedWeight = false
+	s.Weight = WeightFromName(weight)
 }
 
 func (s *Style) SetWeightNumber(weight int) {
-	s.WeightNumber = weight
-	s.UseNumberedWeight = true
+	s.Weight = weight
 }
 
 func (s *Style) SetStyle(style string) {
 	s.Style = style
 }
 
-func (s *Style) ToCSS() string {
-
-	className := s.Name
+func (s *Style) Resolve() Resolved {
+	r := Resolved{
+		Name:          s.Name,
+		ClassName:     s.Name,
+		SizeRem:       s.Size,
+		LineHeightRem: s.LineHeight,
+		TrackingRem:   s.Tracking,
+		Weight:        s.Weight,
+		FontStyle:     s.Style,
+	}
 	if s.cssClass != "" {
-		className = s.cssClass
+		r.ClassName = s.cssClass
 	}
-
-	css := "." + className + " {\n"
-
-	// Add font-family if specified
-	if s.Family != nil && s.Family.Name != "" {
-		css += "  font-family: \"" + s.Family.Name + "\""
-		for _, fallback := range s.Family.FallbackFonts {
-			css += ", \"" + fallback + "\""
-		}
-		css += ";\n"
+	if s.Family != nil {
+		r.FamilyName = s.Family.Name
+		r.FallbackFonts = s.Family.FallbackFonts
 	}
+	return r
+}
 
-	// Add font-size if specified
-	if s.Size > 0 {
-		css += fmt.Sprintf("  font-size: %grem;\n", s.Size)
+// cssProperties returns the style's set properties as ordered
+// name/value pairs, shared by the class and custom-property renderers.
+func (r Resolved) cssProperties() [][2]string {
+	var props [][2]string
+	if r.FamilyName != "" {
+		props = append(props, [2]string{"font-family", fontFamilyList(r.FamilyName, r.FallbackFonts)})
 	}
-
-	// Add line-height if specified
-	if s.LineHeight > 0 {
-		css += fmt.Sprintf("  line-height: %grem;\n", s.LineHeight)
+	if r.SizeRem > 0 {
+		props = append(props, [2]string{"font-size", fmt.Sprintf("%grem", r.SizeRem)})
 	}
-
-	// Add letter-spacing (tracking) if specified
-	if s.Tracking != 0 {
-		css += fmt.Sprintf("  letter-spacing: %grem;\n", s.Tracking)
+	if r.LineHeightRem > 0 {
+		props = append(props, [2]string{"line-height", fmt.Sprintf("%grem", r.LineHeightRem)})
 	}
-
-	// Add font-weight if specified
-
-	if s.UseNumberedWeight && s.WeightNumber != 0 {
-		css += fmt.Sprintf("  font-weight: %d;\n", s.WeightNumber)
+	if r.TrackingRem != 0 {
+		props = append(props, [2]string{"letter-spacing", fmt.Sprintf("%grem", r.TrackingRem)})
 	}
-
-	if !s.UseNumberedWeight && s.Weight != "" {
-		css += `  font-weight: ` + s.Weight + ";\n"
+	if r.Weight != 0 {
+		props = append(props, [2]string{"font-weight", strconv.Itoa(r.Weight)})
 	}
-
-	// Add font-style if specified
-	if s.Style != "" {
-		css += "  font-style: " + s.Style + ";\n"
+	if r.FontStyle != "" {
+		props = append(props, [2]string{"font-style", r.FontStyle})
 	}
+	return props
+}
 
-	css += "}"
+func (s *Style) ToCSS() string {
+	r := s.Resolve()
 
-	css = css_util.Format(css)
-	return css
+	var b strings.Builder
+	b.WriteString("." + r.ClassName + " {\n")
+	for _, p := range r.cssProperties() {
+		b.WriteString(p[0] + ": " + p[1] + ";\n")
+	}
+	b.WriteString("}")
+
+	return css_util.Format(b.String())
 }
 
 func (s *Style) ToCSSVars(prefix string) string {
+	r := s.Resolve()
+
 	varPrefix := "--"
 	if prefix != "" {
 		varPrefix += prefix + "-"
 	}
-	varPrefix += s.Name
+	varPrefix += r.Name
 
-	css := ""
-
-	// Add font-family if specified
-	if s.Family != nil && s.Family.Name != "" {
-		css += varPrefix + "-font-family: \"" + s.Family.Name + "\""
-		for _, fallback := range s.Family.FallbackFonts {
-			css += ", \"" + fallback + "\""
-		}
-		css += ";\n"
+	var b strings.Builder
+	for _, p := range r.cssProperties() {
+		b.WriteString(varPrefix + "-" + p[0] + ": " + p[1] + ";\n")
 	}
-
-	// Add font-size if specified
-	if s.Size > 0 {
-		css += fmt.Sprintf("%s-font-size: %grem;\n", varPrefix, s.Size)
-	}
-
-	// Add line-height if specified
-	if s.LineHeight > 0 {
-		css += fmt.Sprintf("%s-line-height: %grem;\n", varPrefix, s.LineHeight)
-	}
-
-	// Add letter-spacing (tracking) if specified
-	if s.Tracking != 0 {
-		css += fmt.Sprintf("%s-letter-spacing: %grem;\n", varPrefix, s.Tracking)
-	}
-
-	// Add font-weight if specified
-	if s.UseNumberedWeight && s.WeightNumber != 0 {
-		css += fmt.Sprintf("%s-font-weight: %d;\n", varPrefix, s.WeightNumber)
-	}
-
-	if !s.UseNumberedWeight && s.Weight != "" {
-		css += varPrefix + "-font-weight: " + s.Weight + ";\n"
-	}
-
-	// Add font-style if specified
-	if s.Style != "" {
-		css += varPrefix + "-font-style: " + s.Style + ";\n"
-	}
-
-	return css
+	return b.String()
 }

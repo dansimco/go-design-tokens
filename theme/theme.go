@@ -2,6 +2,7 @@ package theme
 
 import (
 	"strconv"
+	"strings"
 
 	"fmt"
 
@@ -62,9 +63,7 @@ func (t *Theme) AddSpaceToken(name string, unitMultiple float64) {
 }
 
 func (t *Theme) AddTypeFamily(name string) *typography.Family {
-	family := typography.Family{
-		Name: name,
-	}
+	family := typography.NewFontFamily(name)
 	t.TypeFamilies = append(t.TypeFamilies, family)
 	return &t.TypeFamilies[len(t.TypeFamilies)-1]
 }
@@ -94,14 +93,9 @@ func (t *Theme) ToCSS() string {
 		typePrefix = t.TypePrefix[:len(t.TypePrefix)-1]
 	}
 	for _, style := range t.TypeStyles {
-		styleVars := style.ToCSSVars(typePrefix)
-		if styleVars != "" {
-			// Indent each line
-			for i := 0; i < len(styleVars); i++ {
-				if i == 0 || styleVars[i-1] == '\n' {
-					css += "  "
-				}
-				css += string(styleVars[i])
+		for line := range strings.SplitSeq(style.ToCSSVars(typePrefix), "\n") {
+			if line != "" {
+				css += "  " + line + "\n"
 			}
 		}
 	}
