@@ -234,4 +234,3 @@ func mapTypography(body *PublishVariablesBody, t *theme.Theme, baseUnit float64)
 		}
 	}
 }
-
