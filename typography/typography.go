@@ -68,14 +68,12 @@ func (f *Family) ToCSS() string {
 			srcEntries = append(srcEntries, `local("`+local+`")`)
 		}
 		for _, src := range font.src {
-			// Replace any existing extension with .woff2
-			if !strings.HasSuffix(src, ".woff2") {
-				if idx := strings.LastIndex(src, "."); idx != -1 && idx > strings.LastIndex(src, "/") {
-					src = src[:idx]
-				}
-				src += ".woff2"
+			url, format := src.resolve()
+			entry := `url("` + url + `")`
+			if format != "" {
+				entry += ` format("` + format + `")`
 			}
-			srcEntries = append(srcEntries, `url("`+src+`") format("woff2")`)
+			srcEntries = append(srcEntries, entry)
 		}
 		if len(srcEntries) > 0 {
 			b.WriteString("src: " + strings.Join(srcEntries, ", ") + ";\n")
@@ -97,16 +95,50 @@ func (f *Family) ToCSS() string {
 	return css_util.Format(b.String())
 }
 
+// fontSrc is one @font-face source file. An empty format means "infer it
+// from the URL's extension".
+type fontSrc struct {
+	url    string
+	format string
+}
+
+// resolve returns the URL to write and its format() keyword. A URL with no
+// extension is assumed to be woff2 and gets the extension appended, which
+// keeps the common `AddSrc("/fonts/inter-regular")` shorthand working. An
+// unrecognised extension yields an empty format, so the src is written
+// without a format hint rather than a wrong one.
+func (s fontSrc) resolve() (string, string) {
+	if s.format != "" {
+		return s.url, s.format
+	}
+	ext := srcExtension(s.url)
+	if ext == "" {
+		return s.url + ".woff2", FormatWOFF2
+	}
+	return s.url, formatExtensions[ext]
+}
+
 type Font struct {
-	src      []string
+	src      []fontSrc
 	localSrc []string
 	Weight   int // 0 = unset; use the Weight* constants
 	Style    string
 	Display  string
 }
 
+// AddSrc adds a font file, taking its format from the file extension
+// (.woff2, .woff, .ttf, .otf, .ttc, .otc, .eot, .svg). A path with no
+// extension is treated as woff2. Sources are written in the order added, so
+// list the most-preferred format first.
 func (f *Font) AddSrc(src string) {
-	f.src = append(f.src, src)
+	f.src = append(f.src, fontSrc{url: src})
+}
+
+// AddSrcFormat adds a font file with an explicit format, for URLs whose
+// extension is missing or misleading (a CDN endpoint, for instance). See
+// FormatFromName for the accepted names.
+func (f *Font) AddSrcFormat(src, format string) {
+	f.src = append(f.src, fontSrc{url: src, format: FormatFromName(format)})
 }
 
 func (f *Font) AddLocalSrc(fontName string) {

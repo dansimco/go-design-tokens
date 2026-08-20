@@ -198,3 +198,133 @@ func TestGenericFallbacksUnquoted(t *testing.T) {
 		t.Errorf("expected unquoted generic fallback, got %s", css)
 	}
 }
+
+func TestTextCaseFromName(t *testing.T) {
+	cases := map[string]string{
+		"uppercase":  TextCaseUppercase,
+		"Upper":      TextCaseUppercase,
+		"All Caps":   TextCaseUppercase,
+		"lower-case": TextCaseLowercase,
+		"title":      TextCaseCapitalize,
+		"none":       TextCaseOriginal,
+		"not-a-name": TextCaseOriginal,
+	}
+	for name, want := range cases {
+		if got := TextCaseFromName(name); got != want {
+			t.Errorf("TextCaseFromName(%q) = %q, want %q", name, got, want)
+		}
+	}
+}
+
+func TestUppercaseStyleCSS(t *testing.T) {
+
+	style := NewTypeStyle("overline")
+	style.SetSize(0.75)
+	style.SetUppercase()
+
+	if style.Resolve().TextCase != TextCaseUppercase {
+		t.Errorf("expected resolved text case %q, got %q", TextCaseUppercase, style.Resolve().TextCase)
+	}
+
+	css := style.ToCSS()
+	if !strings.Contains(css, "text-transform: uppercase;") {
+		t.Errorf("expected 'text-transform: uppercase', got %s", css)
+	}
+
+	vars := style.ToCSSVars("t")
+	if !strings.Contains(vars, "--t-overline-text-transform: uppercase;") {
+		t.Errorf("expected text-transform custom property, got %s", vars)
+	}
+}
+
+func TestTextCaseOriginalOmittedFromCSS(t *testing.T) {
+
+	style := NewTypeStyle("body")
+	style.SetSize(1)
+	style.SetTextCase("original")
+
+	if css := style.ToCSS(); strings.Contains(css, "text-transform") {
+		t.Errorf("expected no text-transform for original case, got %s", css)
+	}
+}
+
+func TestFontFormatFromName(t *testing.T) {
+	cases := map[string]string{
+		"woff2":             FormatWOFF2,
+		".woff":             FormatWOFF,
+		"TTF":               FormatTrueType,
+		"truetype":          FormatTrueType,
+		"otf":               FormatOpenType,
+		"ttc":               FormatCollection,
+		"embedded-opentype": FormatEOT,
+		"eot":               FormatEOT,
+		"not-a-format":      "",
+	}
+	for name, want := range cases {
+		if got := FormatFromName(name); got != want {
+			t.Errorf("FormatFromName(%q) = %q, want %q", name, got, want)
+		}
+	}
+}
+
+func TestFontFaceFormatsFromExtension(t *testing.T) {
+
+	family := NewFontFamily("Inter")
+	font := (&family).AddFont()
+	font.AddSrc("/assets/fonts/inter.woff2")
+	font.AddSrc("/assets/fonts/inter.woff")
+	font.AddSrc("/assets/fonts/inter.ttf")
+	font.AddSrc("/assets/fonts/inter.otf")
+	font.AddSrc("/assets/fonts/inter.eot?#iefix")
+
+	css := family.ToCSS()
+
+	expected := `src: url("/assets/fonts/inter.woff2") format("woff2"), ` +
+		`url("/assets/fonts/inter.woff") format("woff"), ` +
+		`url("/assets/fonts/inter.ttf") format("truetype"), ` +
+		`url("/assets/fonts/inter.otf") format("opentype"), ` +
+		`url("/assets/fonts/inter.eot?#iefix") format("embedded-opentype");`
+
+	if !strings.Contains(css, expected) {
+		t.Errorf("expected src \n %s \n got \n %s", expected, css)
+	}
+}
+
+func TestFontFaceExplicitFormat(t *testing.T) {
+
+	family := NewFontFamily("Inter")
+	font := (&family).AddFont()
+	font.AddSrcFormat("https://cdn.example.com/fonts?id=inter-regular", "woff2")
+
+	css := family.ToCSS()
+	if !strings.Contains(css, `url("https://cdn.example.com/fonts?id=inter-regular") format("woff2");`) {
+		t.Errorf("expected explicit format on an extensionless URL, got %s", css)
+	}
+}
+
+func TestFontFaceUnknownExtensionOmitsFormat(t *testing.T) {
+
+	family := NewFontFamily("Inter")
+	font := (&family).AddFont()
+	font.AddSrc("/assets/fonts/inter.dfont")
+
+	css := family.ToCSS()
+	if !strings.Contains(css, `url("/assets/fonts/inter.dfont");`) {
+		t.Errorf("expected src without a format hint, got %s", css)
+	}
+	if strings.Contains(css, "format(") {
+		t.Errorf("expected no format() for an unknown extension, got %s", css)
+	}
+}
+
+func TestFontFaceExtensionlessSrcDefaultsToWOFF2(t *testing.T) {
+
+	family := NewFontFamily("Inter")
+	font := (&family).AddFont()
+	font.AddSrc("/assets/fonts/inter-regular")
+
+	css := family.ToCSS()
+	if !strings.Contains(css, `url("/assets/fonts/inter-regular.woff2") format("woff2");`) {
+		t.Errorf("expected .woff2 to be appended, got %s", css)
+	}
+}

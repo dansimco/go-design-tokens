@@ -17,6 +17,7 @@ type Style struct {
 	Tracking   float64
 	Weight     int // 0 = unset; use the Weight* constants
 	Style      string
+	TextCase   string // "" = unset; use the TextCase* constants
 	cssClass   string
 }
 
@@ -34,6 +35,7 @@ type Resolved struct {
 	TrackingRem   float64
 	Weight        int // 0 = unset
 	FontStyle     string
+	TextCase      string // "" = unset
 }
 
 var invalidNameChars = regexp.MustCompile(`[^a-z0-9_-]+`)
@@ -84,6 +86,17 @@ func (s *Style) SetStyle(style string) {
 	s.Style = style
 }
 
+// SetTextCase sets the style's text case from a common name ("uppercase",
+// "all caps", "title", ...). See TextCaseFromName.
+func (s *Style) SetTextCase(textCase string) {
+	s.TextCase = TextCaseFromName(textCase)
+}
+
+// SetUppercase renders the style in all caps.
+func (s *Style) SetUppercase() {
+	s.TextCase = TextCaseUppercase
+}
+
 func (s *Style) Resolve() Resolved {
 	r := Resolved{
 		Name:          s.Name,
@@ -93,6 +106,7 @@ func (s *Style) Resolve() Resolved {
 		TrackingRem:   s.Tracking,
 		Weight:        s.Weight,
 		FontStyle:     s.Style,
+		TextCase:      s.TextCase,
 	}
 	if s.cssClass != "" {
 		r.ClassName = s.cssClass
@@ -125,6 +139,9 @@ func (r Resolved) cssProperties() [][2]string {
 	}
 	if r.FontStyle != "" {
 		props = append(props, [2]string{"font-style", r.FontStyle})
+	}
+	if r.TextCase != "" && r.TextCase != TextCaseOriginal {
+		props = append(props, [2]string{"text-transform", r.TextCase})
 	}
 	return props
 }

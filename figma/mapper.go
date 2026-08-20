@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dansimco/go-design-tokens/theme"
+	"github.com/dansimco/go-design-tokens/typography"
 )
 
 func ThemeToVariables(t *theme.Theme) PublishVariablesBody {
@@ -232,5 +233,32 @@ func mapTypography(body *PublishVariablesBody, t *theme.Theme, baseUnit float64)
 				VariableID: varID, ModeID: modeID, Value: float64(r.Weight),
 			})
 		}
+
+		if tc := figmaTextCase(r.TextCase); tc != "" {
+			varID := "$var:type-" + r.Name + "-text-case"
+			body.Variables = append(body.Variables, VariableChange{
+				Action: "CREATE", ID: varID,
+				Name: prefix + "text-case", VariableCollectionID: collID, ResolvedType: "STRING",
+			})
+			body.VariableModeValues = append(body.VariableModeValues, VariableModeValue{
+				VariableID: varID, ModeID: modeID, Value: tc,
+			})
+		}
 	}
+}
+
+// figmaTextCase maps a resolved text case to Figma's TextNode.textCase
+// values. An unset case returns "" so no variable is emitted.
+func figmaTextCase(textCase string) string {
+	switch textCase {
+	case typography.TextCaseUppercase:
+		return "UPPER"
+	case typography.TextCaseLowercase:
+		return "LOWER"
+	case typography.TextCaseCapitalize:
+		return "TITLE"
+	case typography.TextCaseOriginal:
+		return "ORIGINAL"
+	}
+	return ""
 }
