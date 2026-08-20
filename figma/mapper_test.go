@@ -147,3 +147,32 @@ func TestThemeToVariables_RadiusAndTypographySkippedWhenEmpty(t *testing.T) {
 		}
 	}
 }
+
+func TestThemeToVariables_TypographyTextCase(t *testing.T) {
+	th := theme.New()
+	overline := th.AddTypeStyle("overline")
+	overline.SetSize(0.75)
+	overline.SetUppercase()
+
+	body := ThemeToVariables(&th)
+
+	var found bool
+	for _, v := range body.Variables {
+		if v.Name != "overline/text-case" {
+			continue
+		}
+		found = true
+		if v.ResolvedType != "STRING" {
+			t.Errorf("expected STRING variable, got %q", v.ResolvedType)
+		}
+	}
+	if !found {
+		t.Fatal("expected an overline/text-case variable")
+	}
+
+	for _, mv := range body.VariableModeValues {
+		if mv.VariableID == "$var:type-overline-text-case" && mv.Value != "UPPER" {
+			t.Errorf("expected text case value UPPER, got %v", mv.Value)
+		}
+	}
+}

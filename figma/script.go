@@ -173,6 +173,11 @@ func buildTypoVars(data *pluginScriptData, t *theme.Theme, baseUnit float64) {
 				Name: prefix + "font-weight", VarType: "FLOAT", Value: float64(r.Weight),
 			})
 		}
+		if tc := figmaTextCase(r.TextCase); tc != "" {
+			data.TypoVars = append(data.TypoVars, pluginTypoVar{
+				Name: prefix + "text-case", VarType: "STRING", Value: tc,
+			})
+		}
 	}
 }
 
